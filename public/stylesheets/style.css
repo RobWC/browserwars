@@ -6,3 +6,17 @@ body {
 a {
   color: #00B7FF;
 }
+
+#gameScreen {
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+}
+
+.overlay {
+  position: relative;
+}
+
+canvas {
+	position: absolute;
+}

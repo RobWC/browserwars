@@ -1,0 +1,83 @@
+.Chrome {
+  background: url(/images/sprite-sheet.png) 0px 0px no-repeat;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+
+.Firefox {
+  background: url(/images/sprite-sheet.png) -34px -72px no-repeat;
+  display: inline-block;
+  width: 31px;
+  height: 29px;
+}
+
+.IE {
+  background: url(/images/sprite-sheet.png) -108px -36px no-repeat;
+  display: inline-block;
+  width: 28px;
+  height: 27px;
+}
+
+.Opera {
+  background: url(/images/sprite-sheet.png) -108px -67px no-repeat;
+  display: inline-block;
+  width: 23px;
+  height: 29px;
+}
+
+.Safari {
+  background: url(/images/sprite-sheet.png) -108px 0px no-repeat;
+  display: inline-block;
+  width: 28px;
+  height: 32px;
+}
+
+.Space {
+  background: url(/images/sprite-sheet.png) -72px 0px no-repeat;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+
+.Space-blank {
+  background: url(/images/sprite-sheet.png) -72px -36px no-repeat;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+
+.shot {
+  background: url(/images/sprite-sheet.png) -69px -72px no-repeat;
+  display: inline-block;
+  width: 4px;
+  height: 11px;
+}
+
+.slasher-ex-01 {
+  background: url(/images/sprite-sheet.png) 0px -72px no-repeat;
+  display: inline-block;
+  width: 30px;
+  height: 31px;
+}
+
+.slasher-ex-02 {
+  background: url(/images/sprite-sheet.png) -36px 0px no-repeat;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+
+.slasher-ex-03 {
+  background: url(/images/sprite-sheet.png) 0px -36px no-repeat;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+
+.slasher-ex-04 {
+  background: url(/images/sprite-sheet.png) -36px -36px no-repeat;
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}

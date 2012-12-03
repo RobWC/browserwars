@@ -1,4 +1,15 @@
 extends layout
 
 block content
-  h1 Browser Wars!  
+  h1 Browser Wars!
+  //audio(autoplay,loop)
+    source(src='/audio/standard.ogg',type='audio/ogg')
+  audio(id='shoot')
+    source(src='/audio/shoot.ogg',type='audio/ogg')
+    source(src='/audio/shoot.wav',type='audio/wav')
+  audio(id='explode')
+    source(src='/audio/explode.ogg',type='audio/ogg')
+    source(src='/audio/explode.wav',type='audio/wav')
+  div#cavasDiv.overlay
+    canvas(z-index='1')#coverScreen
+    canvas(z-index='2')#gameScreen
