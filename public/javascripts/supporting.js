@@ -42,32 +42,12 @@ var loadImage = function(src) {
   }
   return img;
 };
-
-var Shot = function(shootImage,x,y) {
-   this.img = shootImage;
-   this.x = x;
-   this.y = y;
- };
- 
-var shoot = function(ctx,actor,shootImage,shotArray) {
-   document.getElementById('shoot').play();
-   if (shootReady) {
-     shotArray.push(new Shot(shootImage,actor.x,actor.y))
-   }
- };
- 
- var shootReady = false;
- var shootImage = new Image();
- shootImage.src = '/images/shot.png';
- shootImage.onload = function() {
-   shootReady = true;
- };
  
 function spawn(enemies) {
    var random = Math.random();
-   if (random > 0.0 && random < 0.02) {
+   if (random > 0.0 && random < 0.01) {
      enemies.push(new Enemy(attackers.slasher)); 
-   } else if ( random > 0.02 && random < 0.05) {
+   } else if ( random > 0.02 && random < 0.03) {
      enemies.push(new Enemy(attackers.looper));   
    } else if (random > 0.05 && random < 0.06) {
      enemies.push(new Enemy(attackers.rocket));

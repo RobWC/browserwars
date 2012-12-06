@@ -1,8 +1,48 @@
 $(document).ready(function() {
+  //enable mute button
+  var MUTED = ($.jStorage.get('MUTED')) ? true : false;
+  if (MUTED) {
+    $('#muteMusic').button('toggle');
+    document.getElementById('theme').pause();
+    document.getElementById('trouble').pause();
+    $.jStorage.set('MUTED', true)
+    MUTED = true;
+  } else {
+    $.jStorage.set('MUTED', false)
+     document.getElementById('theme').play();
+    MUTED = false;
+  }
+  $('#muteMusic').click(function(){
+    if (MUTED) {
+      if (actor.lives > 0) {
+        $('#muteMusic').button('toggle');
+        document.getElementById('theme').pause();
+        document.getElementById('trouble').pause();
+      } else {
+        document.getElementById('theme').pause();
+        document.getElementById('trouble').pause();
+      }
+      $.jStorage.set('MUTED', false)
+      MUTED = false;
+    } else {
+      if (actor.lives > 0) {
+        document.getElementById('theme').play();
+        document.getElementById('trouble').pause();
+      } else {
+        document.getElementById('theme').pause();
+        document.getElementById('trouble').play();
+      }
+      $.jStorage.set('MUTED', true)
+      MUTED = true;
+    }
+  })
+
   //setup requestAnimationFrame
   var FRAME_RATE = 60;
+  $.jStorage.set('MUTED',MUTED)
   var then = 0;
   var shots = [];
+  var enemyShots = [];
   var enemies = [];
   var explosions = [];
   var screenTiles = [];
@@ -19,10 +59,12 @@ $(document).ready(function() {
   var actor = getBrowserName();
 
   var reset = function() {
+    MUTED = $.jStorage.get('MUTED')
+    enemies = [];
+    enemyShots = [];
+    shots = [];
     actor.x = canvas.width / 2;
     actor.y = canvas.height + 30;
-    enemies = [];
-    shots = [];
     explosions = [];
     screenTiles = [];
     keysDown = {};
@@ -30,7 +72,7 @@ $(document).ready(function() {
     addEventListener('keydown', function(e) {
       if(e.keyCode == 32 && shootUp == true) {
         shootUp = false;
-        shoot(ctx, actor, shootImage, shots);
+        actor.shoot(shootImage, shots);
       } else {
         keysDown[e.keyCode] = true;
       }
@@ -67,8 +109,10 @@ $(document).ready(function() {
           coverLayer.width = WIDTH;
           actor.lives = 2;
           actor.score = 0;
-          document.getElementById('theme').play();
-          document.getElementById('trouble').pause();
+          if (!MUTED) {
+            document.getElementById('theme').play();
+            document.getElementById('trouble').pause();
+          };
           reset();
           draw()
           $('#coverScreen').css('z-index', 1)
@@ -90,7 +134,7 @@ $(document).ready(function() {
         if(e.keyCode == 13) {
           this.removeEventListener('keydown', arguments.callee, false);
           //write you died or some shit
-          if (0 == actor.lives) {
+          if (0 == actor.lives && !MUTED) {
             document.getElementById('theme').pause();
             document.getElementById('trouble').play();
           }
@@ -145,53 +189,6 @@ $(document).ready(function() {
       }
     };
 
-  var Explosion = function(x, y) {
-    this.x = x;
-    this.y = y;
-    this.frame = 0;
-    this.maxFrame = Math.floor(Math.random() * 60);
-  }
-
-  Explosion.prototype.explode = function() {
-    this.frame = this.frame + 1;
-    var lingrad = ctx.createRadialGradient(this.x, this.y, this.x + 4, this.y + 4, Math.PI, Math.PI);
-    lingrad.addColorStop(0, 'rgba(255,0,0,.8)');
-    lingrad.addColorStop(0.2, 'rgba(255,255,0,.8)');
-    lingrad.addColorStop(0.4, 'rgba(255,0,0,.8)');
-    lingrad.addColorStop(0.6, 'rgba(255,255,0,.8)');
-    lingrad.addColorStop(0.8, 'rgba(255,0,0,.8)');
-    lingrad.addColorStop(1, 'rgba(255,255,0,.8)');
-    var lingrad2 = ctx.createRadialGradient(this.x, this.y, this.x + 4, this.y + 4, Math.PI, Math.PI);
-    lingrad2.addColorStop(1, 'rgba(0,0,0,.7)');
-    ctx.fillStyle = lingrad;
-    ctx.strokeStyle = lingrad2;
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 2 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 2 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 2 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 2 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 2 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 2 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 2 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 2 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 8 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 8 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 8 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 8 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 8 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 8 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 8 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 8 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 2 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 14 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 2 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 14 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 2 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 14 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 2 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 14 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 14 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 2 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 14 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 2 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 14 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 2 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 14 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 2 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 20 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 6 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 20 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 6 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 20 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 6 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 20 - this.frame / 3, Math.round(Math.random() * 6 + 1) +this.y + 6 + this.frame / 3, this.frame / 8, this.frame / 8)
-    if(this.frame == this.maxFrame) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   function shootEnemy(enemy, shot) {
     explosions.push(new Explosion(enemies[enemy].x, enemies[enemy].y));
     enemies.splice(enemy, 1);
@@ -203,6 +200,11 @@ $(document).ready(function() {
 
   function draw() {
       loopID = requestAnimationFrame(draw, canvas)
+      //check for bonus
+      if (actor.score / 1000 > actor.bonus) {
+        actor.lives = actor.lives + 1;
+        actor.bonus = actor.bonus + 1;
+      }
       ctx.save()
       var now = new Date().getTime();
       var delta = now - then;
@@ -214,16 +216,26 @@ $(document).ready(function() {
         drawScreen(canvas, screenTiles);
       };
       for(var i = 0; i < explosions.length; i++) {
-        if(explosions[i].explode()) {
+        if(explosions[i].explode(ctx)) {
           explosions.shift(i, 1);
         }
       }
+      //actor shots
       for(var i = 0; i < shots.length; i++) {
         shots[i].y = shots[i].y - 32;
         if(checkEdgeCollisions(shots[i])) {
           shots.splice(i, 1);
         } else {
           ctx.drawImage(shots[i].img, shots[i].x, shots[i].y);
+        }
+      }
+      //enemy shots
+      for(var i = 0; i < enemyShots.length; i++) {
+        enemyShots[i].y = enemyShots[i].y + 8;
+        if(checkEdgeCollisions(enemyShots[i])) {
+          enemyShots.splice(i, 1);
+        } else {
+          ctx.drawImage(enemyShots[i].img, enemyShots[i].x, enemyShots[i].y);
         }
       }
       if(actor.img.ready) {
@@ -234,8 +246,11 @@ $(document).ready(function() {
           enemies.splice(i, 1);
         } else {
           enemies[i].move();
+          var shot = Math.random()
+          if (shot > 0.7 && shot < 0.71) {
+            enemies[i].shoot(looperShotImage,enemyShots);
+          }
           ctx.drawImage(enemies[i].img, enemies[i].x, enemies[i].y);
-
         }
       }
       //check to see if player has collided with an enemy
@@ -244,6 +259,12 @@ $(document).ready(function() {
           killActor()
         }
       }
+      for (var i = 0; i < enemyShots.length; i++) {
+        if(boundingBoxCollide(actor, enemyShots[i])) {
+          killActor();
+        }
+      }
+      //check if enemies collided with a shot
       for(var i = 0; i < enemies.length; i++) {
         for(var j = 0; j < shots.length; j++) {
           if(boundingBoxCollide(shots[j], enemies[i])) {
