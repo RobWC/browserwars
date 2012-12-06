@@ -69,6 +69,8 @@ function spawn(enemies) {
      enemies.push(new Enemy(attackers.slasher)); 
    } else if ( random > 0.02 && random < 0.05) {
      enemies.push(new Enemy(attackers.looper));   
+   } else if (random > 0.05 && random < 0.06) {
+     enemies.push(new Enemy(attackers.rocket));
    };
 }
 

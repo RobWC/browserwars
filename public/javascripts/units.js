@@ -1,17 +1,27 @@
 var attackers = {
   slasher: {
-    img: loadImage('/images/Slasher.png'),
+    img: loadImage('/images/Slasher-eye.png'),
     x: 0,
     y: 0,
     type: 'diagnal',
     direction: 'right'
   },
   looper: {
-    img: loadImage('/images/OtherBrowser.png'),
+    img: loadImage('/images/Looper.png'),
     x: 0,
     y: 0,
     type: 's-pattern',
     direction: 'right'
+  },
+  rocket: {
+    img: loadImage('/images/Rocket.png'),
+    x: 0,
+    y: 0,
+    type: 'rocket',
+    direction: 'down',
+    special: {
+      engine: true
+    }
   }
 }
 
@@ -48,12 +58,14 @@ Enemy.prototype.move = function() {
       } else {
         self.direction = 'right';
       }
-    }
+    } 
     if (self.direction == 'right') {
-      self.x = parseInt(Math.round(self.x + 8));
+      self.x = parseInt(Math.round(self.x + 6));
     } else {
-      self.x = parseInt(Math.round(self.x - 8));
+      self.x = parseInt(Math.round(self.x - 6));
     }
+  } else if (self.type == 'rocket') {
+      self.y = parseInt(Math.round(this.y + 10));
   }
 };
 
@@ -143,7 +155,7 @@ browserChar.prototype.checkEdgeCollisionsShip = function(canvas) {
   if(self.x < 0) {
     self.x = 0;
     return true;
-  } else if(self.y < 0) {
+  } else if(self.y < 0 + TILE_SIZE) {
     self.y = 0;
     return true;
   } else if(self.x > maxWidth) {

@@ -7,6 +7,7 @@ $(document).ready(function() {
   var explosions = [];
   var screenTiles = [];
   var keysDown = {};
+  var shootUp = true;
   var canvas = document.getElementById('gameScreen');
   var coverLayer = document.getElementById('coverScreen');
   coverLayer.width = WIDTH;
@@ -27,7 +28,8 @@ $(document).ready(function() {
     keysDown = {};
     generateScreen(canvas, screenTiles);
     addEventListener('keydown', function(e) {
-      if(e.keyCode == 32) {
+      if(e.keyCode == 32 && shootUp == true) {
+        shootUp = false;
         shoot(ctx, actor, shootImage, shots);
       } else {
         keysDown[e.keyCode] = true;
@@ -35,6 +37,7 @@ $(document).ready(function() {
     }, false);
 
     addEventListener('keyup', function(e) {
+      shootUp = true;
       delete keysDown[e.keyCode];
     }, false);
   };
@@ -60,11 +63,12 @@ $(document).ready(function() {
       addEventListener('keydown', function(e) {
         if(e.keyCode == 13) {
           this.removeEventListener('keydown', arguments.callee, false);
-          //write you died or some shit
           $('#coverScreen').css('z-index', 1)
           coverLayer.width = WIDTH;
           actor.lives = 2;
           actor.score = 0;
+          document.getElementById('theme').play();
+          document.getElementById('trouble').pause();
           reset();
           draw()
           $('#coverScreen').css('z-index', 1)
@@ -86,6 +90,10 @@ $(document).ready(function() {
         if(e.keyCode == 13) {
           this.removeEventListener('keydown', arguments.callee, false);
           //write you died or some shit
+          if (0 == actor.lives) {
+            document.getElementById('theme').pause();
+            document.getElementById('trouble').play();
+          }
           $('#coverScreen').css('z-index', 1)
           coverLayer.width = WIDTH;
           reset();
@@ -141,7 +149,7 @@ $(document).ready(function() {
     this.x = x;
     this.y = y;
     this.frame = 0;
-    this.maxFrame = 60;
+    this.maxFrame = Math.floor(Math.random() * 60);
   }
 
   Explosion.prototype.explode = function() {
@@ -157,26 +165,26 @@ $(document).ready(function() {
     lingrad2.addColorStop(1, 'rgba(0,0,0,.7)');
     ctx.fillStyle = lingrad;
     ctx.strokeStyle = lingrad2;
-    ctx.fillRect(this.x + 2 + this.frame / 3, this.y + 2 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x - 2 - this.frame / 3, this.y - 2 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x - 2 - this.frame / 3, this.y + 2 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x + 2 + this.frame / 3, this.y - 2 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x + 8 + this.frame / 3, this.y + 8 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x - 8 - this.frame / 3, this.y - 8 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x + 8 + this.frame / 3, this.y - 8 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x - 8 - this.frame / 3, this.y + 8 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x + 2 + this.frame / 3, this.y + 14 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x - 2 - this.frame / 3, this.y - 14 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x + 2 + this.frame / 3, this.y - 14 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x - 2 - this.frame / 3, this.y + 14 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x + 14 + this.frame / 3, this.y + 2 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x - 14 - this.frame / 3, this.y - 2 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x + 14 + this.frame / 3, this.y - 2 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x - 14 - this.frame / 3, this.y + 2 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x + 20 + this.frame / 3, this.y + 6 + this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x - 20 - this.frame / 3, this.y - 6 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x + 20 + this.frame / 3, this.y - 6 - this.frame / 3, this.frame / 8, this.frame / 8)
-    ctx.fillRect(this.x - 20 - this.frame / 3, this.y + 6 + this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 2 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 2 + this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 2 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 2 - this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 2 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 2 + this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 2 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 2 - this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 8 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 8 + this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 8 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 8 - this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 8 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 8 - this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 8 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 8 + this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 2 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 14 + this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 2 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 14 - this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 2 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 14 - this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 2 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 14 + this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 14 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 2 + this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 14 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 2 - this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 14 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 2 - this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 14 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 2 + this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 20 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y + 6 + this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 20 - this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 6 - this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x + 20 + this.frame / 3, Math.round(Math.random() * 6 + 1) + this.y - 6 - this.frame / 3, this.frame / 8, this.frame / 8)
+    ctx.fillRect(Math.round(Math.random() * 6 + 1) + this.x - 20 - this.frame / 3, Math.round(Math.random() * 6 + 1) +this.y + 6 + this.frame / 3, this.frame / 8, this.frame / 8)
     if(this.frame == this.maxFrame) {
       return true;
     } else {
@@ -204,18 +212,12 @@ $(document).ready(function() {
       if(spaceBGImage.ready && starsBGImage) {
         generateScreenRow(canvas, screenTiles);
         drawScreen(canvas, screenTiles);
-        ctx.fillStyle = "#FFFFFF";
-        ctx.font = "20px Arial";
-        ctx.textBaseline = 'top';
-        ctx.fillText(actor.name + ' Warrior', WIDTH - 180, 12);
-        ctx.fillText('Score: ' + actor.score, WIDTH - 180, 32);
-        ctx.fillText('Lives: ', WIDTH - 180, 52);
-        var lifeX = 100;
-        for(var i = 0; i < actor.lives; i++) {
-          ctx.drawImage(actor.img, WIDTH - lifeX, 55, 16, 16)
-          lifeX = lifeX + 20;
-        }
       };
+      for(var i = 0; i < explosions.length; i++) {
+        if(explosions[i].explode()) {
+          explosions.shift(i, 1);
+        }
+      }
       for(var i = 0; i < shots.length; i++) {
         shots[i].y = shots[i].y - 32;
         if(checkEdgeCollisions(shots[i])) {
@@ -233,6 +235,7 @@ $(document).ready(function() {
         } else {
           enemies[i].move();
           ctx.drawImage(enemies[i].img, enemies[i].x, enemies[i].y);
+
         }
       }
       //check to see if player has collided with an enemy
@@ -248,10 +251,16 @@ $(document).ready(function() {
           }
         }
       }
-      for(var i = 0; i < explosions.length; i++) {
-        if(explosions[i].explode()) {
-          explosions.shift(i, 1);
-        }
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "20px Arial";
+      ctx.textBaseline = 'top';
+      ctx.fillText(actor.name + ' Warrior', WIDTH - 180, 12);
+      ctx.fillText('Score: ' + actor.score, WIDTH - 180, 32);
+      ctx.fillText('Lives: ', WIDTH - 180, 52);
+      var lifeX = 120;
+      for(var i = 0; i < actor.lives; i++) {
+        ctx.drawImage(actor.img, WIDTH - lifeX, 55, 16, 16)
+        lifeX = lifeX - 20;
       }
       ctx.restore();
   }
