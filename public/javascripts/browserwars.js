@@ -1,30 +1,54 @@
 $(document).ready(function() {
   //enable mute button
-  var MUTED = ($.jStorage.get('MUTED')) ? true : false;
-  if (MUTED) {
-    $('#muteMusic').button('toggle');
+  var MUTED_MUSIC = ($.jStorage.get('MUTED_MUSIC')) ? true : false;
+  var MUTED_SOUNDS = ($.jStorage.get('MUTED_SOUNDS')) ? true : false;
+
+  if (MUTED_MUSIC) {
+    $('#muteMusic').addClass('active');
     document.getElementById('theme').pause();
     document.getElementById('trouble').pause();
-    $.jStorage.set('MUTED', true)
-    MUTED = true;
+    $.jStorage.set('MUTED_MUSIC', true)
+    MUTED_MUSIC = true; 
   } else {
-    $.jStorage.set('MUTED', false)
-     document.getElementById('theme').play();
-    MUTED = false;
-  }
-  $('#muteMusic').click(function(){
-    if (MUTED) {
-      if (actor.lives > 0) {
-        $('#muteMusic').button('toggle');
-        document.getElementById('theme').pause();
-        document.getElementById('trouble').pause();
-      } else {
-        document.getElementById('theme').pause();
-        document.getElementById('trouble').pause();
-      }
-      $.jStorage.set('MUTED', false)
-      MUTED = false;
+    $.jStorage.set('MUTED_MUSIC', false)
+    $('#muteMusic').removeClass('active');
+    document.getElementById('theme').play();
+    MUTED_MUSIC = false;
+  };
+
+  if (MUTED_SOUNDS) {
+    $('#muteSounds').addClass('active');
+    $.jStorage.set('MUTED_SOUNDS', true)
+    MUTED_SOUNDS = true; 
+  } else {
+    $.jStorage.set('MUTED_SOUNDS', false)
+    $('#muteSounds').removeClass('active');
+    document.getElementById('theme').play();
+    MUTED_SOUNDS = false;
+  };
+
+  //mute sounds
+  var playEffect = function(id) {
+    if (MUTED_SOUNDS) {
+      //dont play the sound
     } else {
+      document.getElementById(id).play();
+    }
+  }
+
+
+  $('#muteSounds').click(function(){
+    if (MUTED_SOUNDS) {
+      $.jStorage.set('MUTED_SOUNDS', false)
+      MUTED_SOUNDS = false;
+    } else {
+      $.jStorage.set('MUTED_SOUNDS', true)
+      MUTED_SOUNDS = true;
+    }
+  });
+
+  $('#muteMusic').click(function(){
+    if (MUTED_MUSIC) {
       if (actor.lives > 0) {
         document.getElementById('theme').play();
         document.getElementById('trouble').pause();
@@ -32,14 +56,25 @@ $(document).ready(function() {
         document.getElementById('theme').pause();
         document.getElementById('trouble').play();
       }
-      $.jStorage.set('MUTED', true)
-      MUTED = true;
+      $.jStorage.set('MUTED_MUSIC', false)
+      MUTED_MUSIC = false;
+    } else {
+      if (actor.lives > 0) {
+        document.getElementById('theme').pause();
+        document.getElementById('trouble').pause();
+      } else {
+        document.getElementById('theme').pause();
+        document.getElementById('trouble').pause();
+      }
+      $.jStorage.set('MUTED_MUSIC', true)
+      MUTED_MUSIC = true;
     }
   })
 
   //setup requestAnimationFrame
   var FRAME_RATE = 60;
-  $.jStorage.set('MUTED',MUTED)
+  $.jStorage.set('MUTED_MUSIC',MUTED_MUSIC)
+  $.jStorage.set('MUTED_SOUNDS',MUTED_SOUNDS)
   var then = 0;
   var shots = [];
   var enemyShots = [];
@@ -59,7 +94,8 @@ $(document).ready(function() {
   var actor = getBrowserName();
 
   var reset = function() {
-    MUTED = $.jStorage.get('MUTED')
+    MUTED_MUSIC = $.jStorage.get('MUTED_MUSIC')
+    MUTED_SOUNDS = $.jStorage.get('MUTED_SOUNDS')
     enemies = [];
     enemyShots = [];
     shots = [];
@@ -85,6 +121,7 @@ $(document).ready(function() {
   };
 
   var killActor = function() {
+    playEffect('death');
     setTimeout(function() {
       cancelAnimationFrame(loopID);
     }, 1 * 1)
@@ -99,6 +136,33 @@ $(document).ready(function() {
       cctx.fillStyle = "#FF0000";
       cctx.font = "24px Helvetica Neue";
       cctx.textAlign = 'center';
+      cctx.globalAlpha = 0.4;
+      cctx.drawImage(actor.img,actor.x/2,actor.y/2,256,256);
+      cctx.globalAlpha = 0.4;
+      var lingrad = ctx.createRadialGradient(actor.x, actor.y, actor.x + 4, actor.y + 4, Math.PI, Math.PI);
+      lingrad.addColorStop(0, 'rgba(255,0,0,.8)');
+      lingrad.addColorStop(0.1, 'rgba(255,128,0,.8)');
+      lingrad.addColorStop(0.2, 'rgba(255,255,0,.8)');
+      lingrad.addColorStop(0.3, 'rgba(255,128,0,.8)');
+      lingrad.addColorStop(0.4, 'rgba(240,0,0,.8)');
+      lingrad.addColorStop(0.5, 'rgba(255,255,0,.8)');
+      lingrad.addColorStop(0.6, 'rgba(255,128,0,.8)');
+      lingrad.addColorStop(0.8, 'rgba(255,0,0,.8)');
+      lingrad.addColorStop(1, 'rgba(255,255,0,.8)');
+      cctx.beginPath();
+      cctx.fillStyle = lingrad;
+      cctx.arc(actor.x, actor.y, 256, 0, Math.PI*2, true);
+      cctx.closePath(); 
+      cctx.fill();
+      cctx.font = "36px Helvetica Neue";
+      cctx.fillStyle = "#FF0000";
+      cctx.globalAlpha = 1;
+      cctx.shadowColor = '#FFFFFF';
+      cctx.shadowOffsetX = 2;
+      cctx.shadowOffsetY = 4;
+      cctx.shadowBlur = 5;
+      cctx.strokeStyle = "#0000FF";
+      cctx.lineWidth = 12;
       cctx.fillText('You are DEAD!', WIDTH / 2, HEIGHT / 2 + 75)
       cctx.fillText('Press Enter to restart', WIDTH / 2, HEIGHT / 2 + 125)
       $('#coverScreen').css('z-index', 3)
@@ -109,7 +173,7 @@ $(document).ready(function() {
           coverLayer.width = WIDTH;
           actor.lives = 2;
           actor.score = 0;
-          if (!MUTED) {
+          if (!MUTED_MUSIC) {
             document.getElementById('theme').play();
             document.getElementById('trouble').pause();
           };
@@ -190,11 +254,11 @@ $(document).ready(function() {
     };
 
   function shootEnemy(enemy, shot) {
+    actor.score = actor.score + enemies[enemy].value;
     explosions.push(new Explosion(enemies[enemy].x, enemies[enemy].y));
     enemies.splice(enemy, 1);
     shots.splice(shot, 1);
-    actor.score = actor.score + 10;
-    document.getElementById('explode').play();
+    playEffect('explode');
   }
 
 
@@ -222,7 +286,7 @@ $(document).ready(function() {
       }
       //actor shots
       for(var i = 0; i < shots.length; i++) {
-        shots[i].y = shots[i].y - 32;
+        shots[i].y = shots[i].y - 12;
         if(checkEdgeCollisions(shots[i])) {
           shots.splice(i, 1);
         } else {
@@ -268,7 +332,7 @@ $(document).ready(function() {
       for(var i = 0; i < enemies.length; i++) {
         for(var j = 0; j < shots.length; j++) {
           if(boundingBoxCollide(shots[j], enemies[i])) {
-            shootEnemy(i, j);
+            actor.killEnemy(i, j);
           }
         }
       }
