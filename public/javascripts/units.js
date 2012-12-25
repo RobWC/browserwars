@@ -240,7 +240,7 @@ browserChar.prototype.die = function() {
       cctx.globalAlpha = 0.4;
       cctx.drawImage(self.img,self.x/2,self.y/2,256,256);
       cctx.globalAlpha = 0.4;
-      var lingrad = ctx.createRadialGradient(self.x, self.y, self.x + 4, self.y + 4, Math.PI, Math.PI);
+      var lingrad = cctx.createRadialGradient(self.x, self.y, self.x + 4, self.y + 4, Math.PI, Math.PI);
       lingrad.addColorStop(0, 'rgba(255,0,0,.8)');
       lingrad.addColorStop(0.1, 'rgba(255,128,0,.8)');
       lingrad.addColorStop(0.2, 'rgba(255,255,0,.8)');
@@ -269,10 +269,6 @@ browserChar.prototype.die = function() {
       $('#coverScreen').css('z-index', 3);
       self.lives = 2;
       self.score = 0;
-      if (!MUTED_MUSIC) {
-        document.getElementById('theme').play();
-        document.getElementById('trouble').pause();
-      };
     } else {
       var cctx = document.getElementById('coverScreen').getContext('2d');
       cctx.globalAlpha = 0.2;
@@ -285,10 +281,6 @@ browserChar.prototype.die = function() {
       cctx.fillText('You have been defeated!', document.getElementById('coverScreen').width / 2, document.getElementById('coverScreen').height / 2 + 75)
       cctx.fillText('Press Enter to continue', document.getElementById('coverScreen').width / 2, document.getElementById('coverScreen').height / 2 + 125)
       $('#coverScreen').css('z-index', 3);
-      if (0 == self.lives && !MUTED) {
-        document.getElementById('theme').pause();
-        document.getElementById('trouble').play();
-      }
     }
   }
 

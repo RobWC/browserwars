@@ -30,7 +30,6 @@ require(["jquery", "bootstrap.min", "modernizr", "jstorage", "supporting", "coll
 			if($.jStorage.get('MUTED_MUSIC')) {
 				$('#muteMusic').addClass('active');
 				document.getElementById('theme').pause();
-				document.getElementById('trouble').pause();
 			} else {
 				$('#muteMusic').removeClass('active');
 				document.getElementById('theme').play();
@@ -45,7 +44,7 @@ require(["jquery", "bootstrap.min", "modernizr", "jstorage", "supporting", "coll
 				$.jStorage.set('MUTED_SOUNDS',true)
 			} else {
 				$('#muteSounds').removeClass('active');
-				var sounds =  $('audio:not([loop])').attr(muted);
+				var sounds =  $('audio:not([loop])');
 				for (var i = 0;i < sounds.length;i++){
 					sounds[i].muted = false
 				}
@@ -56,35 +55,20 @@ require(["jquery", "bootstrap.min", "modernizr", "jstorage", "supporting", "coll
   Setup sound buttons
   */
 			$('#muteSounds').click(function() {
-				var sounds =  $('audio:not([loop])').attr(muted);
+				var sounds =  $('audio:not([loop])');
 				for (var i = 0;i < sounds.length;i++){
-					sounds[i].muted = !sounds[i].muted
+					sounds[i].muted = !sounds[i].muted;
 				}
 				$.jStorage.set('MUTED_SOUNDS', true)
-				sounds[i].muted = !sounds[i].muted
 			});
 
 			$('#muteMusic').click(function() {
-				if(MUTED_MUSIC) {
-					if(actor.lives > 0) {
-						document.getElementById('theme').muted = false;
-						document.getElementById('trouble').muted = true;
-					} else {
-						document.getElementById('theme').pause();
-						document.getElementById('trouble').play();
-					}
+				if($.jStorage.get('MUTED_MUSIC')) {
+					document.getElementById('theme').play();
 					$.jStorage.set('MUTED_MUSIC', false)
-					MUTED_MUSIC = false;
 				} else {
-					if(actor.lives > 0) {
-						document.getElementById('theme').pause();
-						document.getElementById('trouble').pause();
-					} else {
-						document.getElementById('theme').pause();
-						document.getElementById('trouble').pause();
-					}
+					document.getElementById('theme').pause();
 					$.jStorage.set('MUTED_MUSIC', true)
-					MUTED_MUSIC = true;
 				}
 			})
 
@@ -172,7 +156,6 @@ require(["jquery", "bootstrap.min", "modernizr", "jstorage", "supporting", "coll
 				for(var i = 0; i < enemyShots.length; i++) {
 					if(boundingBoxCollide(actor, enemyShots[i])) {
 						setTimeout(function() {
-							console.log(loopID)
 				      cancelAnimationFrame(loopID);
 				       actor.die();
 								addEventListener('keydown', function(e) {
@@ -216,17 +199,14 @@ require(["jquery", "bootstrap.min", "modernizr", "jstorage", "supporting", "coll
 
 
 			var reset = function() {
-					MUTED_MUSIC = $.jStorage.get('MUTED_MUSIC')
-					MUTED_SOUNDS = $.jStorage.get('MUTED_SOUNDS')
-					if(MUTED_MUSIC) {
+					if($.jStorage.get('MUTED_MUSIC')) {
 						$('#muteMusic').addClass('active');
 						document.getElementById('theme').pause();
-						document.getElementById('trouble').pause();
 					} else {
 						$('#muteMusic').removeClass('active');
 						document.getElementById('theme').play();
 					};
-					if(MUTED_SOUNDS) {
+					if($.jStorage.get('MUTED_SOUNDS')) {
 						$('#muteSounds').addClass('active');
 					} else {
 						$('#muteSounds').removeClass('active');
