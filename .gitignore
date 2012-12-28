@@ -1,1 +1,4 @@
 *node_modules*
+.c9revisions
+.swp
+npm-debug.log
