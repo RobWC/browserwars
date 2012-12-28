@@ -1,5 +1,4 @@
-require(["jquery", "bootstrap.min", "modernizr", "jstorage", "supporting", "collisions"], function($) {
-  require(["screen", "units"], function() {
+require(["jquery","bootstrap.min", "modernizr", "jstorage", "supporting", "collisions","screen", "units"], function($) {
     $(function() {
       var FRAME_RATE = 60;
       var browserLoopID = 0;
@@ -259,5 +258,4 @@ require(["jquery", "bootstrap.min", "modernizr", "jstorage", "supporting", "coll
         }
       }, false);
     });
-  });
 });

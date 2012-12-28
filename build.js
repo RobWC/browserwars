@@ -1,8 +1,8 @@
 ({
-  baseUrl: "./",
-  paths: {
-    jquery: "some/other/jquery"
-  },
+  baseUrl: "./public/javascripts",
   name: "main",
+  paths: {
+    "jquery": "require-jquery"
+  },
   out: "main-built.js"
 })
