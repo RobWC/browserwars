@@ -1,10 +1,7 @@
 {
-  "name": "application-name",
-  "version": "0.0.1",
+  "name": "BrowserWars",
+  "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "start": "node app"
-  },
    "engines": {
     "node": "0.8.x",
     "npm":  "1.1.x"

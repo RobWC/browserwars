@@ -42,7 +42,7 @@ function drawBrowserLoop(images,ctx,canvas) {
 }
 
 var initalScreen = function(canvas) {
-  var titleName = 'BrowserWars!'
+  var titleName = 'BrowserWarrior!'
   var ctx = canvas.getContext('2d');
   ctx.shadowBlur = 0;
   ctx.fillStyle = "rgb(0,0,0)";
