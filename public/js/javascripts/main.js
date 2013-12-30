@@ -1,5 +1,61 @@
-require(["jquery","bootstrap.min", "modernizr", "jstorage", "supporting", "collisions","screen", "units"], function($) {
+require(["jquery","bootstrap.min", "modernizr", "jstorage", "utility", "collisions","screen", "enemy", "units"], function($) {
     $(function() {
+
+      var shootReady = false;
+      var shootImage = new Image();
+      shootImage.src = '/images/shot.png';
+      shootImage.onload = function() {
+        shootReady = true;
+      };
+
+      var looperShotReady = false;
+      var looperShotImage = new Image();
+      looperShotImage.src = '/images/Looper-shot.png';
+      looperShotImage.onload = function() {
+        looperShotReady = true;
+      };
+
+
+      var browser = {
+        chrome: {
+          name: 'Chrome',
+          img: new loadImage('/images/Chrome.png'),
+          regex: /(Chrome)\/(\d+\.\d+)/g,
+          speed: 400,
+        },
+        firefox: {
+          name: 'Firefox',
+          img: new loadImage('/images/Firefox.png'),
+          regex: /(Firefox)\/(\d+\.\d+)/g,
+          speed: 300
+        },
+        safari: {
+          name: 'Safari',
+          img: new loadImage('/images/Safari.png'),
+          regex: /(Version)\/(\d+\.\d+)/g,
+          speed: 340
+        },
+        opera: {
+          name: 'Opera',
+          img: new loadImage('/images/Opera.png'),
+          regex: /(Opera)\/(\d+\.\d+)/g,
+          speed: 280
+        },
+        ie: {
+          name: 'Interet Explorer',
+          img: new loadImage('/images/IE.png'),
+          regex: /MSIE\s([\d]+)/g,
+          speed: 354
+        },
+        other: {
+          name: 'Other',
+          img: new loadImage('/images/OtherBrowser.png'),
+          regex: /.*/,
+          speed: 256
+        }
+      };
+
+
       var FRAME_RATE = 60;
       var browserLoopID = 0;
       var TILE_SIZE = 32;
@@ -74,6 +130,7 @@ require(["jquery","bootstrap.min", "modernizr", "jstorage", "supporting", "colli
         }
       })
 
+      //draw loop
       function draw() {
         loopID = requestAnimationFrame(draw, canvas)
         //check for bonus
@@ -203,9 +260,9 @@ require(["jquery","bootstrap.min", "modernizr", "jstorage", "supporting", "colli
         ctx.restore();
       }
 
-
-
       var reset = function() {
+        //music stuff
+        /*
         if ($.jStorage.get('MUTED_MUSIC')) {
           $('#muteMusic').addClass('active');
           document.getElementById('theme').pause();
@@ -220,6 +277,8 @@ require(["jquery","bootstrap.min", "modernizr", "jstorage", "supporting", "colli
         else {
           $('#muteSounds').removeClass('active');
         };
+        */
+
         enemies = [];
         enemyShots = [];
         shots = [];

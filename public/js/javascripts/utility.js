@@ -1,5 +1,3 @@
-
-
 var getBrowserName = function(random) {
   if (!!random) {
     if (random > 0.0 && random < 0.2) {
@@ -43,6 +41,6 @@ var loadImage = function(src) {
   img.ready = false;
   img.onload = function () {
     this.ready = true;
-  }
+  };
   return img;
 };

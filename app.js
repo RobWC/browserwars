@@ -3,10 +3,10 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes')
-  , http = require('http')
-  , path = require('path');
+var express = require('express'),
+ routes = require('./routes'),
+ http = require('http'),
+ path = require('path');
 
 var app = express();
 
@@ -21,7 +21,7 @@ app.configure(function(){
   app.use(express.cookieParser('your secret here'));
   app.use(express.session());
   app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public', { maxAge: 30000 })));
+  app.use(express.static(path.join(__dirname, 'public'), { maxAge: 30000 }));
 });
 
 app.configure('development', function(){
