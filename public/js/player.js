@@ -1,6 +1,6 @@
-var Player = function(browserObj) {
-  this.name = browserObj.name;
-  this.img = browserObj.img;
+var Player = function(name) {
+  this.name = name;
+  this.img = ''; //Player image
   this.speed = browserObj.speed;
   this.x = 0;
   this.y = 0;
@@ -16,16 +16,16 @@ Player.prototype.move = function(keysDown, canvas, modifier) {
   var self = this;
   if(38 in keysDown || 87 in keysDown) {
     self.y = Math.round(self.y - (self.speed * modifier));
-  };
+  }
   if(40 in keysDown || 83 in keysDown) {
     self.y = Math.round(self.y + (self.speed * modifier));
-  };
+  }
   if(37 in keysDown || 65 in keysDown) {
     self.x = Math.round(self.x - (self.speed * modifier));
-  };
+  }
   if(39 in keysDown || 68 in keysDown) {
     self.x = Math.round(self.x + (self.speed * modifier));
-  };
+  }
   self.checkEdgeCollisionsShip(canvas);
 };
 
@@ -89,7 +89,7 @@ Player.prototype.die = function() {
       cctx.beginPath();
       cctx.fillStyle = lingrad;
       cctx.arc(self.x, self.y, 256, 0, Math.PI*2, true);
-      cctx.closePath(); 
+      cctx.closePath();
       cctx.fill();
       cctx.font = "36px Helvetica Neue";
       cctx.fillStyle = "#FF0000";
